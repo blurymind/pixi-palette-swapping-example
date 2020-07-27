@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="node_modules/pixi.js/bin/pixi.js"></script>
+        <script src="PaletteFilter.js"></script>
+    </head>
+    <body>
+        <button id="toggle-button">Show Only NES Colors</button>
+        <br/>
+        <script>
+// PIXI general setup
+var renderer = new PIXI.autoDetectRenderer(800, 600);
+document.body.appendChild(renderer.view);
+var stage = new PIXI.Stage(0xffffff);
+var container = new PIXI.DisplayObjectContainer();
+stage.addChild(container);
+
+// Create a texture for the circle
+var megaman = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAF0AAAAcCAYAAAADdbMKAAACi0lEQVRoQ+2Yu3HDMAyG6SoaI2XmSJE5MoY7253HyBwpMkdKj8FUzvEBCgTfEgn5EqnyWRR+8gMIAjyI/WEncGBX3AXFGuh3xG+NnSVu2Eq7i+4SWE748mV+nl61mSW2WoFvpd1VtxXUXRzlDOo6CUbwW2l3122B7osD+utEo7XFZm2kb6U9RLcFUHICLto/f4QwTmixWwN+K+0hurVw7grsSUGNPRDtKvX0h76V9jDdEnTvAAHo8v0sxPPZ4Z/sT3kWYpq6RXpaGzl++jDiak7Ty7XHLhu+5hR0LYwPSYh0DNwCFvL7qBcspewBPa+dSUYrobOtOQZdbyv66LLwKHVEQZRXQqfGcrurqG3BuumBwxM9Q612UbfnmikAfXBc3p7y0NVblF7EzTri5rb4/D0pMTMNVb12ItqpQ2h5m3QM85qj0GFyCr6KcK8Wt9Geizg6HjsR7EUaKq9SYNRm181C15WIrUgwSLWl6aOcQNMSpCRvLLJJSsugCWHSZteN5nS3LQGQohZ2nx7L3DngBvqN1CNpz+AZ1pyuXnAuJtBjKdWmC/pK2a89zODbsCFBDh+ozaabrSRwxMciGQAMuPDyIo9Rm0W3rjmyUZ+savq3/cqfZofwaw/XLUE3i6epBu/x/m0/tr6V9lDdEvTs/QOUdQMuuLSzc/c9A7WH61Z3h/Syi9bencF7HSKjNotutnqhORwqFHywOSD90ky0M2XQZtMNmyN0eKmfAJ5UKNHyamW0ewfYX9YG6MGCgy7Sr1DCLm7+oHRO0FL732mb5qWtOmkdn7ie0n+32mod/5DasY4xNlEcveG9b/hFbbS32modn4eee2veDVl3LZzy9PYR1QR26NWo+g38BXXvWDvG9IC5AAAAAElFTkSuQmCC';
+var megamanTexture = PIXI.Texture.fromImage(megaman);
+
+// Make a bunch of circles
+var circles = [];
+function makeCircle() {
+    var circle = new PIXI.Sprite(megamanTexture);
+    circle.position.x = Math.random() * renderer.width;
+    circle.position.y = Math.random() * renderer.height;
+
+    circles.push(circle);
+    container.addChild(circle);
+}
+
+for(var i = 0; i < 10; i++) {
+    makeCircle();
+}
+
+var palette = new PaletteFilter(PaletteFilter.BLUE);
+
+container.filters = [palette];
+
+// Our render loop
+function render() {
+    renderer.render(stage);
+
+    requestAnimationFrame(render);
+}
+
+render();
+
+var filterIndex = -1;
+var filters = [{blue: PaletteFilter.BLUE},{ pink: PaletteFilter.PINK }];
+
+document.getElementById('toggle-button').addEventListener('click', function() {
+    var currentFilter = filters[filterIndex];
+    if (!currentFilter){
+        currentFilter = filters[0]
+        filterIndex = 0;
+    }
+    console.log(currentFilter, filterIndex)
+    this.innerHTML = Object.keys(currentFilter)[0];
+    container.filters = [new PaletteFilter(Object.values(currentFilter)[0])]
+
+    filterIndex += 1;
+});
+        </script>
+    </body>
+</html>

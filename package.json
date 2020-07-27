@@ -1,0 +1,15 @@
+{
+  "name": "pixi-palette-filter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "PaletteFilter.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "pixi.js": "^3.0.11"
+  }
+}
